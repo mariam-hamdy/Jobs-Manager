@@ -2,6 +2,7 @@ require('dotenv').config()
 require('express-async-errors')
 const ErrorHandlerMiddleware = require('./middleware/error-handler')
 const NotFoundMiddleware = require('./middleware/not-found')
+const authMiddleware = require('./middleware/auth')
 
 const express = require('express')
 const app = express()
@@ -11,8 +12,10 @@ const authRoute = require('./routes/userRoute')
 const jobsRoute = require('./routes/jobRoute')
 
 
+app.use(express.json())
+
 app.use('/api/v1/auth', authRoute)
-app.use('/api/v1/jobs', jobsRoute)
+app.use('/api/v1/jobs', authMiddleware ,jobsRoute)
 
 app.use(ErrorHandlerMiddleware)
 app.use(NotFoundMiddleware)
